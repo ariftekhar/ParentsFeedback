@@ -38,13 +38,6 @@ body.college-evaluation-page .header-brand .school-link{position:absolute;left:0
 body.college-evaluation-page .header-brand .school-logo{display:block}
 body.college-evaluation-page #assessmentForm .section.active > .section-title{text-align:center}
 body.college-evaluation-page .section-indicator{text-align:center}
-body.teacher-evaluation-page .header-top{justify-content:center;position:relative}
-body.teacher-evaluation-page .header-brand{justify-content:center;text-align:center}
-body.teacher-evaluation-page .header-brand > div{text-align:center}
-body.teacher-evaluation-page .theme-toggle{position:absolute;right:0}
-body.teacher-evaluation-page .header-brand .school-link{position:absolute;left:0}
-body.teacher-evaluation-page .header-brand .school-logo{display:block}
-body.teacher-evaluation-page .section-indicator{text-align:center}
 .subtitle{color:var(--muted)}
 .section{background:var(--card);border-radius:16px;padding:22px;margin:18px 0;box-shadow:var(--shadow)}
 .section-header{display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--border);padding-bottom:12px;margin-bottom:18px;flex-wrap:wrap}
@@ -176,7 +169,6 @@ const OPTION_EMOJIS = {
   "Satisfactory": "👌",
   "Poor": "👎"
 };
-const SECTIONS = 30;
 const COLLEGE_RATING_QUESTIONS = [
   {number: 1, key: "environmentRating", text: "How is the current college environment for supporting everyone's personal development?"},
   {number: 3, key: "educationDevelopmentRating", text: "How effective are the overall measures taken for the development of education?"},
@@ -190,13 +182,6 @@ const COLLEGE_RATING_QUESTIONS = [
   {number: 11, key: "vicePrincipalViewRating", text: "Your view about The Vice-Principal"},
   {number: 12, key: "principalViewRating", text: "Your view about The Principal"}
 ];
-const QUESTION_TEXTS = [
-  "1. Subject Knowledge",
-  "2. Teaching Skill",
-  "3. Sincerity towards The Cadets",
-  "4. Personality & Behaviour"
-];
-const QUESTIONS_PER_SECTION = QUESTION_TEXTS.length;
 const EVALUATION_COPY = {
   college: {
     title: "College Evaluation",
@@ -204,58 +189,12 @@ const EVALUATION_COPY = {
     progressLabel: "College Evaluation",
     thankYouTitle: "Thank you for completing the College Evaluation!",
     thankYouMessage: "Your College Evaluation has been sent. Thank you for your feedback.",
-    otherEvaluationLabel: "Start Teacher's Evaluation"
-  },
-  teacher: {
-    title: "Teacher's Evaluation",
-    formTitle: "Teacher's Evaluation Form",
-    progressLabel: "Teacher's Evaluation",
-    thankYouTitle: "Thank you for completing the Teacher's Evaluation!",
-    thankYouMessage: "Your Teacher's Evaluation has been sent. Thank you for your feedback.",
-    otherEvaluationLabel: "Start College Evaluation"
+    otherEvaluationLabel: "Submit Another Response"
   }
 };
 const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZRAZubuFkVnMT0iyxHoRWzzEBrr4MjIsw-JtFIrd0KEdNLER2BOKjhWYrauXibG0X/exec";
 const COLLEGE_GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYuEB4POxUvuyGKMMDOSFzTtzVqhMVL4mjEx8uchatzoi0Hpg4jbI_naepXFA8_RHm/exec";
-const SECTION_PHOTOS = [
-  "1. MRS. JAMUNA RANI BISWAS.jpg",
-  "2. MD. TAUFIQUL ALAM.jpg",
-  "3. MD. TAREEKUL HAQ.jpg",
-  "4. MR. PRODIPTA KUMAR.jpg",
-  "5. MD. MAHBUBUL ALAM.jpg",
-  "6. MRS. ASMA-UL- MAHMUDA TASLIMA.jpg",
-  "7. MD. MAIN UDDIN KHAN.JPG",
-  "8. MR. MUHAMMAD SHAHAB UDDIN.jpg",
-  "9. MRS. MUKTI RANI MODAK.JPG",
-  "10. MR. SYED SELIMUZZAMAN.JPG",
-  "11. MRS. SHAFINA RAHAT .jpg",
-  "12. MUHAMMD ABUL KALAM AZAD.jpg",
-  "13. MD. MOHIUDDIN KHAN.jpg",
-  "14. MD. ARIF KHAN .jpg",
-  "15.  MD. NAZMUS SHAHID.jpg",
-  "16. MISS MUNNI.jpg",
-  "17. MD. NAZRUL ISLAM.jpg",
-  "18. MD. MATIUR RAHMAN.jpg",
-  "19. MR. INDRAJIT KUNDU.jpg",
-  "20. MR. ABU NAYEEM MOHAMMAD EKRAM.JPG",
-  "21. MR. JOYDEV MONDAL.JPG",
-  "22. MR. METUN MONDOL.jpg",
-  "23. MD. ABDUL MOMIN.jpg",
-  "24. MR. MOHSIN EMRAN.jpg",
-  "25. MR.NAZMUL HASAN.jpg",
-  "26. MR. SAZZADUR RAHMAN .jpg",
-  "27. MR.  NAZIM AL HASAN.jpg",
-  "28. MRS. TASKIA.jpg",
-  "29. MST. JANNATUN  FERDOUS.jpg",
-  "30. MD. IBRAHIM MOLLA.jpg"
-];
 let submissionInProgress = false;
-
-function getSectionPhotoName(index){
-  const photoName = SECTION_PHOTOS[index] || SECTION_PHOTOS[index % SECTION_PHOTOS.length];
-  const name = photoName.replace(/^\d+\.\s*/, "").replace(/\.[^.]+$/, "").trim();
-  return { photoName, name };
-}
 
 function buildForm(){
   const form = document.getElementById("assessmentForm");
@@ -301,43 +240,7 @@ function buildForm(){
       </div>
     </div>
   </section>
-  <section class="section">
-    <div class="section-title">Choose Evaluation</div>
-    <div class="evaluation-options">
-      <button type="button" class="evaluation-choice" onclick="startEvaluation('college')">College Evaluation</button>
-      <button type="button" class="evaluation-choice" onclick="startEvaluation('teacher')">Teacher's Evaluation</button>
-    </div>
   </section>`;
-  for(let s=1;s<=SECTIONS;s++){
-    const { photoName, name } = getSectionPhotoName(s - 1);
-    const safePhotoPath = `photo/${encodeURIComponent(photoName)}`;
-    html += `<section class="section">
-      <div class="section-header">
-        <div class="section-person">
-          <img class="person-photo" src="${safePhotoPath}" alt="${name}">
-          <div class="person-meta">
-            <div class="section-title">${name}</div>
-          </div>
-        </div>
-      </div>`;
-    for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
-      const id = `s${s}q${q}`;
-      html += `<div class="question">
-        <div class="qtext">${QUESTION_TEXTS[q - 1]}</div>
-        <div class="options">`;
-      OPTIONS.forEach((op,i)=>{
-        html += `<label class="option">
-          <input type="radio" name="${id}" value="${op}" required onchange="toggleCommentState('${id}', this.value)"> ${OPTION_EMOJIS[op]} ${op}
-        </label>`;
-      });
-      html += `</div>
-        <div id="${id}-comment-wrap" class="comment-wrap">
-          <textarea id="${id}-comment" class="comment" placeholder="Enter comment..." required></textarea>
-        </div>
-      </div>`;
-    }
-    html += `</section>`;
-  }
   html += `<section class="section">
     <div class="section-title college-section-title"></div>`;
   COLLEGE_RATING_QUESTIONS.forEach(question => {
@@ -417,34 +320,19 @@ function hideComment(id){
 }
 
 function updateProgress(){
-  const total = SECTIONS*QUESTIONS_PER_SECTION;
-  let answered=0;
-  for(let s=1;s<=SECTIONS;s++){
-    for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
-      if(document.querySelector(`input[name="s${s}q${q}"]:checked`)) answered++;
-    }
+  const total = COLLEGE_RATING_QUESTIONS.length;
+  let answered = 0;
+  for(const question of COLLEGE_RATING_QUESTIONS){
+    if(document.querySelector(`input[name="college-${question.key}"]:checked`)) answered++;
   }
-  document.getElementById("progressText").textContent = `${answered} of ${total} questions answered`;
-  document.getElementById("progressBar").style.width = `${answered/total*100}%`;
-}
-
-function collectAnswers(){
-  const answers = [];
-  for(let s=1;s<=SECTIONS;s++){
-    for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
-      const id=`s${s}q${q}`;
-      const selected=document.querySelector(`input[name="${id}"]:checked`);
-      const comment=document.getElementById(`${id}-comment`).value;
-      answers.push({
-        section: s,
-        question: q,
-        questionText: QUESTION_TEXTS[q - 1],
-        selectedOption: selected ? OPTION_VALUES[selected.value] : "",
-        comment
-      });
-    }
+  const progressText = document.getElementById("progressText");
+  const progressBar = document.getElementById("progressBar");
+  if(progressText){
+    progressText.textContent = `${answered} of ${total} questions answered`;
   }
-  return answers;
+  if(progressBar){
+    progressBar.style.width = `${answered / total * 100}%`;
+  }
 }
 
 function setSaveStatus(message, isError=false){
@@ -455,9 +343,7 @@ function setSaveStatus(message, isError=false){
 
 async function saveToGoogleSheet(){
   if(submissionInProgress) return;
-  const webAppUrl = selectedEvaluationType === "college"
-    ? COLLEGE_GOOGLE_SHEETS_WEB_APP_URL
-    : GOOGLE_SHEETS_WEB_APP_URL;
+  const webAppUrl = COLLEGE_GOOGLE_SHEETS_WEB_APP_URL;
   if(webAppUrl === "YOUR_APPS_SCRIPT_WEB_APP_URL"
     || webAppUrl === "YOUR_COLLEGE_APPS_SCRIPT_WEB_APP_URL"){
     setSaveStatus("Google Sheets saving is not configured yet. Follow the setup steps in README.md.", true);
@@ -468,14 +354,13 @@ async function saveToGoogleSheet(){
   setSaveStatus("Sending responses to Google Sheets...");
   try{
     const submission = {
-      evaluationType: selectedEvaluationType,
+      evaluationType: "college",
       className: document.getElementById("className").value,
       houseName: document.getElementById("houseName").value,
       formName: document.getElementById("formName").value,
       cadetName: document.getElementById("cadetName").value.trim(),
       cadetNumber: document.getElementById("cadetNumber").value.trim(),
-      answers: selectedEvaluationType === "teacher" ? collectAnswers() : undefined,
-      collegeAnswers: selectedEvaluationType === "college" ? {
+      collegeAnswers: {
         ratings: Object.fromEntries(COLLEGE_RATING_QUESTIONS.map(question => [
           question.key,
           OPTION_VALUES[document.querySelector(`input[name="college-${question.key}"]:checked`)?.value] || ""
@@ -485,20 +370,15 @@ async function saveToGoogleSheet(){
           document.getElementById(`college-${question.key}-comment`).value.trim()
         ])),
         missionDescription: document.getElementById("collegeMissionDescription").value.trim()
-      } : undefined
+      }
     };
-    const isCollegeSubmission = selectedEvaluationType === "college";
     const response = await fetch(webAppUrl, {
       method: "POST",
       mode: "cors",
       headers: {
-        "Content-Type": isCollegeSubmission
-          ? "application/x-www-form-urlencoded;charset=UTF-8"
-          : "text/plain;charset=utf-8"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
       },
-      body: isCollegeSubmission
-        ? new URLSearchParams({payload: JSON.stringify(submission)}).toString()
-        : JSON.stringify(submission)
+      body: new URLSearchParams({payload: JSON.stringify(submission)}).toString()
     });
     const result = await response.json();
     if(!response.ok || result.ok !== true){
@@ -515,7 +395,7 @@ async function saveToGoogleSheet(){
 function showThankYouPage(){
   document.getElementById("assessmentContent").hidden = true;
   document.getElementById("progressSummary").hidden = true;
-  const copy = EVALUATION_COPY[selectedEvaluationType];
+  const copy = EVALUATION_COPY.college;
   const thankYouPage = document.getElementById("thankYouPage");
   document.getElementById("thankYouHeading").textContent = copy.thankYouTitle;
   document.getElementById("thankYouMessage").textContent = copy.thankYouMessage;
@@ -542,8 +422,9 @@ function startOtherEvaluation(){
   document.getElementById("thankYouPage").hidden = true;
   document.getElementById("assessmentContent").hidden = false;
   document.getElementById("progressSummary").hidden = false;
+  selectedEvaluationType = "college";
   updateProgress();
-  startEvaluation(selectedEvaluationType === "college" ? "teacher" : "college");
+  showSection(1);
 }
 
 function finishAssessment(){
@@ -554,47 +435,39 @@ function finishAssessment(){
 }
 
 let currentSection = 1;
-let selectedEvaluationType = "";
+let selectedEvaluationType = "college";
 
 function showSection(sectionNumber){
   currentSection = sectionNumber;
   document.body.classList.toggle("cadet-details-page", currentSection === 1);
-  document.body.classList.toggle("evaluation-choice-page", currentSection === 2);
-  const isCollegePage = currentSection === SECTIONS + 3 && selectedEvaluationType === "college";
-  const isTeacherPage = currentSection >= 3 && currentSection <= SECTIONS + 2;
+  document.body.classList.toggle("evaluation-choice-page", false);
+  const isCollegePage = currentSection === 2;
   document.body.classList.toggle("college-evaluation-page", isCollegePage);
-  document.body.classList.toggle("teacher-evaluation-page", isTeacherPage);
-  const evaluationCopy = EVALUATION_COPY[selectedEvaluationType];
-  const formTitle = isCollegePage || isTeacherPage
-    ? evaluationCopy.formTitle
-    : "BCC Evaluation Form";
+  const evaluationCopy = EVALUATION_COPY.college;
+  const formTitle = isCollegePage ? evaluationCopy.formTitle : "BCC Evaluation Form";
   document.getElementById("formTitle").textContent = formTitle;
   document.title = formTitle;
   const collegeHeading = document.querySelector(".college-section-title");
   if(collegeHeading){
-    collegeHeading.textContent = evaluationCopy?.title || "College Evaluation";
+    collegeHeading.textContent = evaluationCopy.title;
   }
 
   document.querySelectorAll(".section").forEach((section, index)=>{
     section.classList.toggle("active", index + 1 === currentSection);
   });
 
-  const teacherFirstPage = 3;
-  const teacherLastPage = SECTIONS + 2;
-  const collegePage = SECTIONS + 3;
-  document.getElementById("sectionIndicator").textContent = isTeacherPage
-    ? `${evaluationCopy.progressLabel} — Section ${currentSection - 2} of ${SECTIONS}`
-    : isCollegePage ? `${evaluationCopy.progressLabel} — Section 1 of 1` : currentSection === 1 ? "Cadet Details" : "Choose Evaluation";
-  document.getElementById("progressSummary").hidden = !isTeacherPage;
+  document.getElementById("sectionIndicator").textContent = currentSection === 1
+    ? "Cadet Details"
+    : `${evaluationCopy.progressLabel} — Section 1 of 1`;
+  document.getElementById("progressSummary").hidden = currentSection !== 2;
 
   const prevBtn = document.getElementById("prevBtn");
   prevBtn.hidden = currentSection === 1;
   prevBtn.disabled = currentSection === 1;
-  document.querySelector(".actions").hidden = currentSection <= 2;
+  document.querySelector(".actions").hidden = currentSection === 1;
   const nextBtn = document.getElementById("nextBtn");
-  nextBtn.hidden = currentSection === 2;
-  if((selectedEvaluationType === "teacher" && currentSection === teacherLastPage)
-    || (selectedEvaluationType === "college" && isCollegePage)){
+  nextBtn.hidden = false;
+  if(currentSection === 2){
     nextBtn.textContent = "Finish";
     nextBtn.onclick = finishAssessment;
   } else {
@@ -634,50 +507,29 @@ function currentSectionComplete(){
     return true;
   }
 
-  if(currentSection === 2){
+  if(currentSection !== 2){
     return false;
   }
 
-  if(selectedEvaluationType === "college"){
-    for(const question of COLLEGE_RATING_QUESTIONS){
-      const rating = document.querySelector(`input[name="college-${question.key}"]:checked`);
-      if(!rating){
-        alert(`Please select a rating for Question ${question.number}.`);
-        document.querySelector(`input[name="college-${question.key}"]`).focus();
-        return false;
-      }
-      const commentField = document.getElementById(`college-${question.key}-comment`);
-      if(ratingRequiresComment(rating.value) && !commentField.value.trim()){
-        alert(`Please enter a comment for Question ${question.number} when selecting ${rating.value}.`);
-        commentField.focus();
-        return false;
-      }
-    }
-    const missionDescription = document.getElementById("collegeMissionDescription");
-    if(!missionDescription.value.trim()){
-      alert("Please answer Question 2 before submitting.");
-      missionDescription.focus();
+  for(const question of COLLEGE_RATING_QUESTIONS){
+    const rating = document.querySelector(`input[name="college-${question.key}"]:checked`);
+    if(!rating){
+      alert(`Please select a rating for Question ${question.number}.`);
+      document.querySelector(`input[name="college-${question.key}"]`).focus();
       return false;
     }
-    return true;
-  }
-
-  const questionSection = currentSection - 2;
-  for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
-    const radio = document.querySelector(`input[name="s${questionSection}q${q}"]:checked`);
-    const commentField = document.getElementById(`s${questionSection}q${q}-comment`);
-
-    if(!radio){
-      alert(`Please select an option for ${QUESTION_TEXTS[q - 1]} before moving to the next section.`);
-      document.querySelector(`input[name="s${questionSection}q${q}"]`).focus();
-      return false;
-    }
-
-    if(ratingRequiresComment(radio.value) && !commentField.value.trim()){
-      alert(`Please enter a comment for ${radio.value} selections before moving to the next section.`);
+    const commentField = document.getElementById(`college-${question.key}-comment`);
+    if(ratingRequiresComment(rating.value) && !commentField.value.trim()){
+      alert(`Please enter a comment for Question ${question.number} when selecting ${rating.value}.`);
       commentField.focus();
       return false;
     }
+  }
+  const missionDescription = document.getElementById("collegeMissionDescription");
+  if(!missionDescription.value.trim()){
+    alert("Please answer Question 2 before submitting.");
+    missionDescription.focus();
+    return false;
   }
   return true;
 }
@@ -686,34 +538,27 @@ function nextSection(){
   if(!currentSectionComplete()){
     return;
   }
-
   if(currentSection === 1){
     showSection(2);
-  } else if(currentSection >= 3 && currentSection < SECTIONS + 2){
-    showSection(currentSection + 1);
   }
 }
 
 function previousSection(){
   if(currentSection > 1){
-    if(currentSection === 3 || currentSection === SECTIONS + 3){
-      showSection(2);
-    } else {
-      showSection(currentSection - 1);
-    }
+    showSection(currentSection - 1);
   }
 }
 
 function startEvaluation(type){
-  selectedEvaluationType = type;
-  showSection(type === "teacher" ? 3 : SECTIONS + 3);
+  selectedEvaluationType = "college";
+  showSection(2);
 }
 
 function clearForm(){
   if(!confirm("Clear all answers and comments?")) return;
   document.getElementById("assessmentForm").reset();
   document.querySelectorAll(".comment-wrap").forEach(x=>x.classList.remove("show"));
-  selectedEvaluationType = "";
+  selectedEvaluationType = "college";
   updateProgress();
   showSection(1);
 }
