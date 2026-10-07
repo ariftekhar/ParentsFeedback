@@ -147,8 +147,8 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 const OPTIONS = [
   "অসাধারণ",
   "খুব ভালো",
-  "গড় পড়তা",
-  "গড় পড়তার নিচে",
+  "গড়পরতা",
+  "গড়পরতার নিচে",
   "সন্তোষজনক নয়"
 ];
 const OPTION_VALUES = Object.fromEntries(OPTIONS.map((option, index) => [
@@ -158,8 +158,8 @@ const OPTION_VALUES = Object.fromEntries(OPTIONS.map((option, index) => [
 const OPTION_EMOJIS = {
   "অসাধারণ": "🌟",
   "খুব ভালো": "⭐",
-  "গড় পড়তা": "👍",
-  "গড় পড়তার নিচে": "👌",
+  "গড়পরতা": "👍",
+  "গড়পরতার নিচে": "👌",
   "সন্তোষজনক নয়": "👎"
 };
 const COLLEGE_RATING_QUESTIONS = [
@@ -274,8 +274,8 @@ function buildForm(){
 function toggleCollegeComment(key, selectedValue){
   const commentWrap = document.getElementById(`college-${key}-comment-wrap`);
   const commentField = document.getElementById(`college-${key}-comment`);
-  const showComment = selectedValue === "গড় পড়তা"
-    || selectedValue === "গড় পড়তার নিচে"
+  const showComment = selectedValue === "গড়পরতা"
+    || selectedValue === "গড়পরতার নিচে"
     || selectedValue === "সন্তোষজনক নয়";
   commentWrap.classList.toggle("show", showComment);
   commentField.required = showComment;
