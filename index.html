@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BCC Evaluation Form</title>
+<link rel="icon" type="image/png" href="icon/bcc.png">
+<style>
+:root{color-scheme:light;--primary:#2563eb;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b;--border:#e8edf5;--field-border:#cfd8e6;--field-bg:#fff;--option-bg:#fff;--secondary-bg:#e8eef8;--secondary-text:#172033;--progress-bg:#e6ebf3;--photo-bg:#f8fafc;--shadow:0 4px 18px #0000000d}
+body[data-theme="dark"]{color-scheme:dark;--primary:#60a5fa;--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--muted:#a7b4c8;--border:#334155;--field-border:#475569;--field-bg:#0f172a;--option-bg:#1e293b;--secondary-bg:#334155;--secondary-text:#e2e8f0;--progress-bg:#334155;--photo-bg:#0f172a;--shadow:0 4px 18px #00000040}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);transition:background-color .2s,color .2s}
+.container{max-width:1000px;margin:auto;padding:22px}
+header{background:var(--card);border-radius:16px;padding:24px;margin-bottom:18px;box-shadow:var(--shadow)}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.header-brand{display:flex;align-items:center;gap:16px}
+.school-logo{width:68px;height:68px;object-fit:contain;flex-shrink:0}
+h1{margin:0 0 8px;font-size:28px}
+body.cadet-details-page .header-top{justify-content:center;position:relative}
+body.cadet-details-page .header-brand{justify-content:center;text-align:center}
+body.cadet-details-page .header-brand > div{text-align:center}
+body.cadet-details-page .theme-toggle{position:absolute;right:0}
+body.cadet-details-page .header-brand .school-link{position:absolute;left:0}
+body.cadet-details-page .header-brand .school-logo{display:block}
+body.cadet-details-page .section-indicator{text-align:center}
+body.evaluation-choice-page .header-top{justify-content:center;position:relative}
+body.evaluation-choice-page .header-brand{justify-content:center;text-align:center}
+body.evaluation-choice-page .header-brand > div{text-align:center}
+body.evaluation-choice-page .theme-toggle{position:absolute;right:0}
+body.evaluation-choice-page .header-brand .school-link{position:absolute;left:0}
+body.evaluation-choice-page .header-brand .school-logo{display:block}
+body.evaluation-choice-page .section-indicator{text-align:center}
+body.college-evaluation-page .header-top{justify-content:center;position:relative}
+body.college-evaluation-page .header-brand{justify-content:center;text-align:center}
+body.college-evaluation-page .header-brand > div{text-align:center}
+body.college-evaluation-page .theme-toggle{position:absolute;right:0}
+body.college-evaluation-page .header-brand .school-link{position:absolute;left:0}
+body.college-evaluation-page .header-brand .school-logo{display:block}
+body.college-evaluation-page #assessmentForm .section.active > .section-title{text-align:center}
+body.college-evaluation-page .section-indicator{text-align:center}
+body.teacher-evaluation-page .header-top{justify-content:center;position:relative}
+body.teacher-evaluation-page .header-brand{justify-content:center;text-align:center}
+body.teacher-evaluation-page .header-brand > div{text-align:center}
+body.teacher-evaluation-page .theme-toggle{position:absolute;right:0}
+body.teacher-evaluation-page .header-brand .school-link{position:absolute;left:0}
+body.teacher-evaluation-page .header-brand .school-logo{display:block}
+body.teacher-evaluation-page .section-indicator{text-align:center}
+.subtitle{color:var(--muted)}
+.section{background:var(--card);border-radius:16px;padding:22px;margin:18px 0;box-shadow:var(--shadow)}
+.section-header{display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--border);padding-bottom:12px;margin-bottom:18px;flex-wrap:wrap}
+.section-person{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.person-photo{width:72px;height:72px;object-fit:cover;border-radius:50%;border:2px solid var(--border);background:var(--photo-bg)}
+.person-meta{display:flex;flex-direction:column;gap:4px}
+.section-title{font-size:20px;font-weight:700}
+.cadet-details-reminder{color:#dc2626}
+#assessmentForm .section.active:first-child > .section-title{text-align:center}
+body.evaluation-choice-page #assessmentForm .section.active > .section-title{text-align:center}
+.person-name{font-size:16px;color:var(--muted);font-weight:600}
+.student-details{display:flex;gap:16px;flex-wrap:wrap;margin:0 0 20px}
+.class-field{flex:1 1 240px}
+.class-field label{display:block;font-weight:700;margin-bottom:8px}
+.class-field select{width:100%;border:1px solid var(--field-border);border-radius:10px;padding:11px 12px;background:var(--field-bg);color:var(--text);font:inherit}
+.class-field input{width:100%;border:1px solid var(--field-border);border-radius:10px;padding:11px 12px;background:var(--field-bg);color:var(--text);font:inherit}
+.question{padding:16px 0;border-bottom:1px solid var(--border)}
+.question:last-child{border-bottom:0}
+.qtext{font-weight:600;margin-bottom:12px}
+.options{display:flex;gap:10px;flex-wrap:wrap}
+.option{border:1px solid var(--field-border);border-radius:10px;padding:10px 14px;cursor:pointer;background:var(--option-bg)}
+.option:hover{border-color:var(--primary)}
+.option input{margin-right:7px}
+.evaluation-options{display:grid;grid-template-columns:repeat(2,minmax(0,200px));justify-content:center;gap:12px}
+.evaluation-choice{width:100%;min-height:44px;border:1px solid var(--field-border);border-radius:14px;background:var(--option-bg);color:var(--text);font:inherit;font-size:17px;font-weight:700;padding:8px;box-shadow:var(--shadow)}
+.evaluation-choice:hover{border-color:var(--primary);transform:translateY(-2px)}
+.college-answer{width:100%;min-height:120px;border:1px solid var(--field-border);border-radius:10px;padding:12px;background:var(--field-bg);color:var(--text);font:inherit;resize:vertical}
+.comment-wrap{display:none;margin-top:12px}
+.comment-wrap.show{display:block}
+.comment{width:100%;min-height:75px;border:1px solid var(--field-border);border-radius:10px;padding:10px;resize:vertical;background:var(--field-bg);color:var(--text);font:inherit}
+.actions{position:sticky;bottom:0;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(8px);padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:10px;justify-content:center;border-top:1px solid var(--border)}
+.actions[hidden]{display:none}
+.actions-credit{color:var(--muted);font-size:13px;text-align:center}
+button{border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:pointer}
+.primary{background:var(--primary);color:white}
+.secondary{background:var(--secondary-bg);color:var(--secondary-text)}
+.theme-toggle{flex-shrink:0;width:44px;height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
+.progress{height:8px;background:var(--progress-bg);border-radius:99px;overflow:hidden;margin-top:15px}
+.progress-bar{height:100%;width:0;background:var(--primary);transition:.2s}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+.thank-you{background:var(--card);border-radius:16px;padding:48px 24px;margin:18px 0;text-align:center;box-shadow:var(--shadow)}
+.thank-you-icon{font-size:48px;color:var(--primary);margin-bottom:12px}
+.thank-you h2{margin:0 0 10px}
+.thank-you p{color:var(--muted);margin:0}
+.thank-you .other-evaluation-button{margin-top:24px}
+button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+
+.section { display:none; }
+.section.active { display:block; }
+.navigation {
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  margin:18px 0 80px;
+}
+.navigation button { min-width:120px; }
+.navigation .next { margin-left:auto; }
+.section-indicator {
+  font-weight:700;
+  margin-top:8px;
+  color:#2563eb;
+}
+
+@media(max-width:600px){.container{padding:12px}.section{padding:16px}h1{font-size:23px}.header-top{align-items:center}.header-brand{gap:10px}.school-logo{width:52px;height:52px}.actions-credit{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <div class="header-top">
+    <div class="header-brand">
+      <a class="school-link" href="https://infinityar-ict.github.io/EvaluationForm/" target="_blank" rel="noopener noreferrer" aria-label="Visit the evaluation form website">
+        <img class="school-logo" src="icon/bcc.png" alt="Barishal Cadet College emblem">
+      </a>
+      <div>
+        <h1 id="formTitle">BCC Evaluation Form</h1>
+      </div>
+    </div>
+    <button type="button" id="themeToggle" class="secondary theme-toggle" aria-label="Enable dark mode" title="Enable dark mode" aria-pressed="false" onclick="toggleTheme()">
+      <span id="themeIcon" aria-hidden="true">🌙</span>
+    </button>
+  </div>
+  <div id="progressSummary">
+    <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
+    <div id="progressText" class="note">0 of 120 questions answered</div>
+    <div id="sectionIndicator" class="section-indicator">Cadet Details</div>
+  </div>
+</header>
+
+<div id="assessmentContent">
+<form id="assessmentForm"></form>
+
+<div class="navigation">
+  <button type="button" class="secondary" id="prevBtn" onclick="previousSection()">Previous</button>
+  <button type="button" class="primary next" id="nextBtn" onclick="nextSection()">Next</button>
+</div>
+
+<div class="actions">
+  <button type="button" class="secondary" onclick="clearForm()">Clear Form</button>
+  <span class="actions-credit">@ICT Dept., Barishal Cadet College</span>
+</div>
+<div id="saveStatus" class="note" role="status" aria-live="polite" style="text-align:center"></div>
+</div>
+
+<section id="thankYouPage" class="thank-you" aria-labelledby="thankYouHeading" hidden>
+  <div class="thank-you-icon" aria-hidden="true">✓</div>
+  <h2 id="thankYouHeading" tabindex="-1">Thank you!</h2>
+  <p id="thankYouMessage">Your evaluation has been sent. Thank you for completing the assessment.</p>
+  <button type="button" id="otherEvaluationButton" class="primary other-evaluation-button" onclick="startOtherEvaluation()"></button>
+</section>
+</div>
+
+<script>
+const OPTIONS = [
+  "Out Standing",
+  "Excellent",
+  "Above Average",
+  "Satisfactory",
+  "Poor"
+];
+const OPTION_VALUES = Object.fromEntries(OPTIONS.map((option, index) => [
+  option,
+  OPTIONS.length - index
+]));
+const OPTION_EMOJIS = {
+  "Out Standing": "🌟",
+  "Excellent": "⭐",
+  "Above Average": "👍",
+  "Satisfactory": "👌",
+  "Poor": "👎"
+};
+const SECTIONS = 30;
+const COLLEGE_RATING_QUESTIONS = [
+  {number: 1, key: "environmentRating", text: "How is the current college environment for supporting everyone's personal development?"},
+  {number: 3, key: "educationDevelopmentRating", text: "How effective are the overall measures taken for the development of education?"},
+  {number: 4, key: "diningQualityRating", text: "How is the quality of cadet dining and food?"},
+  {number: 5, key: "houseEnvironmentRating", text: "How is the current environment of the house?"},
+  {number: 6, key: "formMasterSincerityRating", text: "How is the sincerity of the form master?"},
+  {number: 7, key: "houseMasterDedicationRating", text: "How is the sincerity and dedication of the house master?"},
+  {number: 8, key: "hospitalFacilitiesRating", text: "How are the hospital facilities and environment?"},
+  {number: 9, key: "armedForcesViewRating", text: "Your view about the Armed Forces"},
+  {number: 10, key: "collegeAdjutantSincerityRating", text: "Your view about The Adjutant"},
+  {number: 11, key: "vicePrincipalViewRating", text: "Your view about The Vice-Principal"},
+  {number: 12, key: "principalViewRating", text: "Your view about The Principal"}
+];
+const QUESTION_TEXTS = [
+  "1. Subject Knowledge",
+  "2. Teaching Skill",
+  "3. Sincerity towards The Cadets",
+  "4. Personality & Behaviour"
+];
+const QUESTIONS_PER_SECTION = QUESTION_TEXTS.length;
+const EVALUATION_COPY = {
+  college: {
+    title: "College Evaluation",
+    formTitle: "College Evaluation Form",
+    progressLabel: "College Evaluation",
+    thankYouTitle: "Thank you for completing the College Evaluation!",
+    thankYouMessage: "Your College Evaluation has been sent. Thank you for your feedback.",
+    otherEvaluationLabel: "Start Teacher's Evaluation"
+  },
+  teacher: {
+    title: "Teacher's Evaluation",
+    formTitle: "Teacher's Evaluation Form",
+    progressLabel: "Teacher's Evaluation",
+    thankYouTitle: "Thank you for completing the Teacher's Evaluation!",
+    thankYouMessage: "Your Teacher's Evaluation has been sent. Thank you for your feedback.",
+    otherEvaluationLabel: "Start College Evaluation"
+  }
+};
+const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZRAZubuFkVnMT0iyxHoRWzzEBrr4MjIsw-JtFIrd0KEdNLER2BOKjhWYrauXibG0X/exec";
+const COLLEGE_GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYuEB4POxUvuyGKMMDOSFzTtzVqhMVL4mjEx8uchatzoi0Hpg4jbI_naepXFA8_RHm/exec";
+const SECTION_PHOTOS = [
+  "1. MRS. JAMUNA RANI BISWAS.jpg",
+  "2. MD. TAUFIQUL ALAM.jpg",
+  "3. MD. TAREEKUL HAQ.jpg",
+  "4. MR. PRODIPTA KUMAR.jpg",
+  "5. MD. MAHBUBUL ALAM.jpg",
+  "6. MRS. ASMA-UL- MAHMUDA TASLIMA.jpg",
+  "7. MD. MAIN UDDIN KHAN.JPG",
+  "8. MR. MUHAMMAD SHAHAB UDDIN.jpg",
+  "9. MRS. MUKTI RANI MODAK.JPG",
+  "10. MR. SYED SELIMUZZAMAN.JPG",
+  "11. MRS. SHAFINA RAHAT .jpg",
+  "12. MUHAMMD ABUL KALAM AZAD.jpg",
+  "13. MD. MOHIUDDIN KHAN.jpg",
+  "14. MD. ARIF KHAN .jpg",
+  "15.  MD. NAZMUS SHAHID.jpg",
+  "16. MISS MUNNI.jpg",
+  "17. MD. NAZRUL ISLAM.jpg",
+  "18. MD. MATIUR RAHMAN.jpg",
+  "19. MR. INDRAJIT KUNDU.jpg",
+  "20. MR. ABU NAYEEM MOHAMMAD EKRAM.JPG",
+  "21. MR. JOYDEV MONDAL.JPG",
+  "22. MR. METUN MONDOL.jpg",
+  "23. MD. ABDUL MOMIN.jpg",
+  "24. MR. MOHSIN EMRAN.jpg",
+  "25. MR.NAZMUL HASAN.jpg",
+  "26. MR. SAZZADUR RAHMAN .jpg",
+  "27. MR.  NAZIM AL HASAN.jpg",
+  "28. MRS. TASKIA.jpg",
+  "29. MST. JANNATUN  FERDOUS.jpg",
+  "30. MD. IBRAHIM MOLLA.jpg"
+];
+let submissionInProgress = false;
+
+function getSectionPhotoName(index){
+  const photoName = SECTION_PHOTOS[index] || SECTION_PHOTOS[index % SECTION_PHOTOS.length];
+  const name = photoName.replace(/^\d+\.\s*/, "").replace(/\.[^.]+$/, "").trim();
+  return { photoName, name };
+}
+
+function buildForm(){
+  const form = document.getElementById("assessmentForm");
+  let html = `<section class="section">
+    <div class="section-title cadet-details-reminder">Cadets are encouraged to mention cadet number and name, but it is not mandatory.</div>
+    <div class="student-details">
+      <div class="class-field">
+        <label for="className">Class <span aria-hidden="true">*</span></label>
+        <select id="className" name="className" required>
+          <option value="">Select a class</option>
+          <option value="VII">VII</option>
+          <option value="VIII">VIII</option>
+          <option value="IX">IX</option>
+          <option value="X">X</option>
+          <option value="XI">XI</option>
+          <option value="XII">XII</option>
+        </select>
+      </div>
+      <div class="class-field">
+        <label for="houseName">House <span aria-hidden="true">*</span></label>
+        <select id="houseName" name="houseName" required>
+          <option value="">Select a house</option>
+          <option value="Shaheed Suhrawardy House">Shaheed Suhrawardy House</option>
+          <option value="Sher-e-Bangla House">Sher-e-Bangla House</option>
+          <option value="Shariatullah House">Shariatullah House</option>
+        </select>
+      </div>
+      <div class="class-field">
+        <label for="formName">Form <span aria-hidden="true">*</span></label>
+        <select id="formName" name="formName" required>
+          <option value="">Select a form</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+        </select>
+      </div>
+      <div class="class-field">
+        <label for="cadetName">Cadet Name</label>
+        <input id="cadetName" name="cadetName" type="text" maxlength="200" autocomplete="name" title="Enter letters and spaces only.">
+      </div>
+      <div class="class-field">
+        <label for="cadetNumber">Cadet Number</label>
+        <input id="cadetNumber" name="cadetNumber" type="text" maxlength="100" inputmode="numeric" pattern="[0-9]*" title="Enter digits only.">
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="section-title">Choose Evaluation</div>
+    <div class="evaluation-options">
+      <button type="button" class="evaluation-choice" onclick="startEvaluation('college')">College Evaluation</button>
+      <button type="button" class="evaluation-choice" onclick="startEvaluation('teacher')">Teacher's Evaluation</button>
+    </div>
+  </section>`;
+  for(let s=1;s<=SECTIONS;s++){
+    const { photoName, name } = getSectionPhotoName(s - 1);
+    const safePhotoPath = `photo/${encodeURIComponent(photoName)}`;
+    html += `<section class="section">
+      <div class="section-header">
+        <div class="section-person">
+          <img class="person-photo" src="${safePhotoPath}" alt="${name}">
+          <div class="person-meta">
+            <div class="section-title">${name}</div>
+          </div>
+        </div>
+      </div>`;
+    for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
+      const id = `s${s}q${q}`;
+      html += `<div class="question">
+        <div class="qtext">${QUESTION_TEXTS[q - 1]}</div>
+        <div class="options">`;
+      OPTIONS.forEach((op,i)=>{
+        html += `<label class="option">
+          <input type="radio" name="${id}" value="${op}" required onchange="toggleCommentState('${id}', this.value)"> ${OPTION_EMOJIS[op]} ${op}
+        </label>`;
+      });
+      html += `</div>
+        <div id="${id}-comment-wrap" class="comment-wrap">
+          <textarea id="${id}-comment" class="comment" placeholder="Enter comment..." required></textarea>
+        </div>
+      </div>`;
+    }
+    html += `</section>`;
+  }
+  html += `<section class="section">
+    <div class="section-title college-section-title"></div>`;
+  COLLEGE_RATING_QUESTIONS.forEach(question => {
+    html += `<div class="question">
+      <div class="qtext">${question.number}. ${question.text}</div>
+      <div class="options">`;
+    OPTIONS.forEach(option => {
+      html += `<label class="option">
+        <input type="radio" name="college-${question.key}" value="${option}" required onchange="toggleCollegeComment('${question.key}', this.value)"> ${OPTION_EMOJIS[option]} ${option}
+      </label>`;
+    });
+    html += `</div>
+      <div id="college-${question.key}-comment-wrap" class="comment-wrap">
+        <textarea id="college-${question.key}-comment" class="comment" placeholder="Please explain your rating..." required></textarea>
+      </div>
+    </div>`;
+    if(question.number === 1){
+      html += `<div class="question">
+        <label class="qtext" for="collegeMissionDescription">2. Is Barishal Cadet College directed towards a well-defined mission or purpose? From your perspective, describe that objective in one or more sentences.</label>
+        <textarea id="collegeMissionDescription" class="college-answer" maxlength="5000" required></textarea>
+      </div>`;
+    }
+  });
+  html += `</section>`;
+  form.innerHTML = html;
+  document.getElementById("cadetName").addEventListener("input", event => {
+    event.target.value = event.target.value
+      .replace(/[^\p{L}\p{M}\s]/gu, "")
+      .replace(/\s+/g, " ");
+  });
+  document.getElementById("cadetNumber").addEventListener("input", event => {
+    event.target.value = event.target.value.replace(/\D/g, "");
+  });
+  showSection(1);
+  document.querySelectorAll('input[type=radio]').forEach(el => el.addEventListener('change', updateProgress));
+}
+
+function toggleCommentState(id, selectedValue){
+  const commentWrap = document.getElementById(id + "-comment-wrap");
+  const commentField = document.getElementById(id + "-comment");
+  const requiresComment = ratingRequiresComment(selectedValue);
+
+  commentWrap.classList.toggle("show", requiresComment);
+  commentField.required = requiresComment;
+  if(!requiresComment){
+    commentField.value = "";
+  }
+}
+
+function ratingRequiresComment(value){
+  return value === "Above Average" || value === "Satisfactory" || value === "Poor";
+}
+
+function toggleCollegeComment(key, selectedValue){
+  const commentWrap = document.getElementById(`college-${key}-comment-wrap`);
+  const commentField = document.getElementById(`college-${key}-comment`);
+  const requiresComment = ratingRequiresComment(selectedValue);
+  commentWrap.classList.toggle("show", requiresComment);
+  commentField.required = requiresComment;
+  if(!requiresComment){
+    commentField.value = "";
+  }
+}
+
+function showComment(id){
+  const commentWrap = document.getElementById(id + "-comment-wrap");
+  const commentField = document.getElementById(id + "-comment");
+  commentWrap.classList.add("show");
+  commentField.setAttribute("required", "required");
+}
+function hideComment(id){
+  const commentWrap = document.getElementById(id + "-comment-wrap");
+  const commentField = document.getElementById(id + "-comment");
+  commentWrap.classList.remove("show");
+  commentField.removeAttribute("required");
+  commentField.value = "";
+}
+
+function updateProgress(){
+  const total = SECTIONS*QUESTIONS_PER_SECTION;
+  let answered=0;
+  for(let s=1;s<=SECTIONS;s++){
+    for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
+      if(document.querySelector(`input[name="s${s}q${q}"]:checked`)) answered++;
+    }
+  }
+  document.getElementById("progressText").textContent = `${answered} of ${total} questions answered`;
+  document.getElementById("progressBar").style.width = `${answered/total*100}%`;
+}
+
+function collectAnswers(){
+  const answers = [];
+  for(let s=1;s<=SECTIONS;s++){
+    for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
+      const id=`s${s}q${q}`;
+      const selected=document.querySelector(`input[name="${id}"]:checked`);
+      const comment=document.getElementById(`${id}-comment`).value;
+      answers.push({
+        section: s,
+        question: q,
+        questionText: QUESTION_TEXTS[q - 1],
+        selectedOption: selected ? OPTION_VALUES[selected.value] : "",
+        comment
+      });
+    }
+  }
+  return answers;
+}
+
+function setSaveStatus(message, isError=false){
+  const status = document.getElementById("saveStatus");
+  status.textContent = message;
+  status.style.color = isError ? "#b91c1c" : "";
+}
+
+async function saveToGoogleSheet(){
+  if(submissionInProgress) return;
+  const webAppUrl = selectedEvaluationType === "college"
+    ? COLLEGE_GOOGLE_SHEETS_WEB_APP_URL
+    : GOOGLE_SHEETS_WEB_APP_URL;
+  if(webAppUrl === "YOUR_APPS_SCRIPT_WEB_APP_URL"
+    || webAppUrl === "YOUR_COLLEGE_APPS_SCRIPT_WEB_APP_URL"){
+    setSaveStatus("Google Sheets saving is not configured yet. Follow the setup steps in README.md.", true);
+    return;
+  }
+
+  submissionInProgress = true;
+  setSaveStatus("Sending responses to Google Sheets...");
+  try{
+    const submission = {
+      evaluationType: selectedEvaluationType,
+      className: document.getElementById("className").value,
+      houseName: document.getElementById("houseName").value,
+      formName: document.getElementById("formName").value,
+      cadetName: document.getElementById("cadetName").value.trim(),
+      cadetNumber: document.getElementById("cadetNumber").value.trim(),
+      answers: selectedEvaluationType === "teacher" ? collectAnswers() : undefined,
+      collegeAnswers: selectedEvaluationType === "college" ? {
+        ratings: Object.fromEntries(COLLEGE_RATING_QUESTIONS.map(question => [
+          question.key,
+          OPTION_VALUES[document.querySelector(`input[name="college-${question.key}"]:checked`)?.value] || ""
+        ])),
+        comments: Object.fromEntries(COLLEGE_RATING_QUESTIONS.map(question => [
+          question.key,
+          document.getElementById(`college-${question.key}-comment`).value.trim()
+        ])),
+        missionDescription: document.getElementById("collegeMissionDescription").value.trim()
+      } : undefined
+    };
+    const isCollegeSubmission = selectedEvaluationType === "college";
+    const response = await fetch(webAppUrl, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "Content-Type": isCollegeSubmission
+          ? "application/x-www-form-urlencoded;charset=UTF-8"
+          : "text/plain;charset=utf-8"
+      },
+      body: isCollegeSubmission
+        ? new URLSearchParams({payload: JSON.stringify(submission)}).toString()
+        : JSON.stringify(submission)
+    });
+    const result = await response.json();
+    if(!response.ok || result.ok !== true){
+      throw new Error(result.error || "The server rejected the response.");
+    }
+    showThankYouPage();
+  } catch(error){
+    setSaveStatus(`Could not save the evaluation: ${error.message}`, true);
+  } finally{
+    submissionInProgress = false;
+  }
+}
+
+function showThankYouPage(){
+  document.getElementById("assessmentContent").hidden = true;
+  document.getElementById("progressSummary").hidden = true;
+  const copy = EVALUATION_COPY[selectedEvaluationType];
+  const thankYouPage = document.getElementById("thankYouPage");
+  document.getElementById("thankYouHeading").textContent = copy.thankYouTitle;
+  document.getElementById("thankYouMessage").textContent = copy.thankYouMessage;
+  document.getElementById("otherEvaluationButton").textContent = copy.otherEvaluationLabel;
+  thankYouPage.hidden = false;
+  document.getElementById("thankYouHeading").focus();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function startOtherEvaluation(){
+  document.querySelectorAll('#assessmentForm input[type="radio"]').forEach(input => {
+    input.checked = false;
+  });
+  document.querySelectorAll('#assessmentForm textarea').forEach(textarea => {
+    textarea.value = "";
+  });
+  document.querySelectorAll(".comment-wrap").forEach(commentWrap => {
+    commentWrap.classList.remove("show");
+  });
+  document.querySelectorAll(".comment, .college-answer").forEach(textarea => {
+    textarea.required = textarea.classList.contains("college-answer");
+  });
+  document.getElementById("saveStatus").textContent = "";
+  document.getElementById("thankYouPage").hidden = true;
+  document.getElementById("assessmentContent").hidden = false;
+  document.getElementById("progressSummary").hidden = false;
+  updateProgress();
+  startEvaluation(selectedEvaluationType === "college" ? "teacher" : "college");
+}
+
+function finishAssessment(){
+  if(!currentSectionComplete()){
+    return;
+  }
+  saveToGoogleSheet();
+}
+
+let currentSection = 1;
+let selectedEvaluationType = "";
+
+function showSection(sectionNumber){
+  currentSection = sectionNumber;
+  document.body.classList.toggle("cadet-details-page", currentSection === 1);
+  document.body.classList.toggle("evaluation-choice-page", currentSection === 2);
+  const isCollegePage = currentSection === SECTIONS + 3 && selectedEvaluationType === "college";
+  const isTeacherPage = currentSection >= 3 && currentSection <= SECTIONS + 2;
+  document.body.classList.toggle("college-evaluation-page", isCollegePage);
+  document.body.classList.toggle("teacher-evaluation-page", isTeacherPage);
+  const evaluationCopy = EVALUATION_COPY[selectedEvaluationType];
+  const formTitle = isCollegePage || isTeacherPage
+    ? evaluationCopy.formTitle
+    : "BCC Evaluation Form";
+  document.getElementById("formTitle").textContent = formTitle;
+  document.title = formTitle;
+  const collegeHeading = document.querySelector(".college-section-title");
+  if(collegeHeading){
+    collegeHeading.textContent = evaluationCopy?.title || "College Evaluation";
+  }
+
+  document.querySelectorAll(".section").forEach((section, index)=>{
+    section.classList.toggle("active", index + 1 === currentSection);
+  });
+
+  const teacherFirstPage = 3;
+  const teacherLastPage = SECTIONS + 2;
+  const collegePage = SECTIONS + 3;
+  document.getElementById("sectionIndicator").textContent = isTeacherPage
+    ? `${evaluationCopy.progressLabel} — Section ${currentSection - 2} of ${SECTIONS}`
+    : isCollegePage ? `${evaluationCopy.progressLabel} — Section 1 of 1` : currentSection === 1 ? "Cadet Details" : "Choose Evaluation";
+  document.getElementById("progressSummary").hidden = !isTeacherPage;
+
+  const prevBtn = document.getElementById("prevBtn");
+  prevBtn.hidden = currentSection === 1;
+  prevBtn.disabled = currentSection === 1;
+  document.querySelector(".actions").hidden = currentSection <= 2;
+  const nextBtn = document.getElementById("nextBtn");
+  nextBtn.hidden = currentSection === 2;
+  if((selectedEvaluationType === "teacher" && currentSection === teacherLastPage)
+    || (selectedEvaluationType === "college" && isCollegePage)){
+    nextBtn.textContent = "Finish";
+    nextBtn.onclick = finishAssessment;
+  } else {
+    nextBtn.textContent = "Next";
+    nextBtn.onclick = nextSection;
+  }
+
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function currentSectionComplete(){
+  if(currentSection === 1){
+    const classField = document.getElementById("className");
+    if(!classField.value){
+      alert("Please select a class before moving to the next section.");
+      classField.focus();
+      return false;
+    }
+    const houseField = document.getElementById("houseName");
+    if(!houseField.value){
+      alert("Please select a house before moving to the next section.");
+      houseField.focus();
+      return false;
+    }
+    const formField = document.getElementById("formName");
+    if(!formField.value){
+      alert("Please select a form before moving to the next section.");
+      formField.focus();
+      return false;
+    }
+    const cadetName = document.getElementById("cadetName");
+    if(cadetName.value.trim() && !/^[\p{L}\p{M}]+(?:\s+[\p{L}\p{M}]+)*$/u.test(cadetName.value.trim())){
+      alert("Cadet Name can contain letters and spaces only.");
+      cadetName.focus();
+      return false;
+    }
+    return true;
+  }
+
+  if(currentSection === 2){
+    return false;
+  }
+
+  if(selectedEvaluationType === "college"){
+    for(const question of COLLEGE_RATING_QUESTIONS){
+      const rating = document.querySelector(`input[name="college-${question.key}"]:checked`);
+      if(!rating){
+        alert(`Please select a rating for Question ${question.number}.`);
+        document.querySelector(`input[name="college-${question.key}"]`).focus();
+        return false;
+      }
+      const commentField = document.getElementById(`college-${question.key}-comment`);
+      if(ratingRequiresComment(rating.value) && !commentField.value.trim()){
+        alert(`Please enter a comment for Question ${question.number} when selecting ${rating.value}.`);
+        commentField.focus();
+        return false;
+      }
+    }
+    const missionDescription = document.getElementById("collegeMissionDescription");
+    if(!missionDescription.value.trim()){
+      alert("Please answer Question 2 before submitting.");
+      missionDescription.focus();
+      return false;
+    }
+    return true;
+  }
+
+  const questionSection = currentSection - 2;
+  for(let q=1;q<=QUESTIONS_PER_SECTION;q++){
+    const radio = document.querySelector(`input[name="s${questionSection}q${q}"]:checked`);
+    const commentField = document.getElementById(`s${questionSection}q${q}-comment`);
+
+    if(!radio){
+      alert(`Please select an option for ${QUESTION_TEXTS[q - 1]} before moving to the next section.`);
+      document.querySelector(`input[name="s${questionSection}q${q}"]`).focus();
+      return false;
+    }
+
+    if(ratingRequiresComment(radio.value) && !commentField.value.trim()){
+      alert(`Please enter a comment for ${radio.value} selections before moving to the next section.`);
+      commentField.focus();
+      return false;
+    }
+  }
+  return true;
+}
+
+function nextSection(){
+  if(!currentSectionComplete()){
+    return;
+  }
+
+  if(currentSection === 1){
+    showSection(2);
+  } else if(currentSection >= 3 && currentSection < SECTIONS + 2){
+    showSection(currentSection + 1);
+  }
+}
+
+function previousSection(){
+  if(currentSection > 1){
+    if(currentSection === 3 || currentSection === SECTIONS + 3){
+      showSection(2);
+    } else {
+      showSection(currentSection - 1);
+    }
+  }
+}
+
+function startEvaluation(type){
+  selectedEvaluationType = type;
+  showSection(type === "teacher" ? 3 : SECTIONS + 3);
+}
+
+function clearForm(){
+  if(!confirm("Clear all answers and comments?")) return;
+  document.getElementById("assessmentForm").reset();
+  document.querySelectorAll(".comment-wrap").forEach(x=>x.classList.remove("show"));
+  selectedEvaluationType = "";
+  updateProgress();
+  showSection(1);
+}
+
+function applyTheme(theme){
+  const isDark = theme === "dark";
+  document.body.dataset.theme = isDark ? "dark" : "light";
+  const toggle = document.getElementById("themeToggle");
+  const label = isDark ? "Disable dark mode" : "Enable dark mode";
+  toggle.setAttribute("aria-label", label);
+  toggle.title = label;
+  document.getElementById("themeIcon").textContent = isDark ? "☀️" : "🌙";
+  toggle.setAttribute("aria-pressed", String(isDark));
+}
+
+function toggleTheme(){
+  const nextTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+  applyTheme(nextTheme);
+  try{
+    localStorage.setItem("assessmentTheme", nextTheme);
+  } catch(error){
+    console.error("Could not save the theme preference.", error);
+  }
+}
+
+function initializeTheme(){
+  let savedTheme = "light";
+  try{
+    savedTheme = localStorage.getItem("assessmentTheme") || "light";
+  } catch(error){
+    console.error("Could not load the saved theme preference.", error);
+  }
+  applyTheme(savedTheme);
+}
+
+initializeTheme();
+buildForm();
+</script>
+</body>
+</html>
