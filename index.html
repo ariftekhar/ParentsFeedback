@@ -15,9 +15,9 @@ header{background:var(--card);border-radius:16px;padding:24px;margin-bottom:18px
 .header-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .header-brand{display:flex;align-items:center;gap:16px}
 .school-logo{width:68px;height:68px;object-fit:contain;flex-shrink:0}
-h1{margin:0 0 8px;font-size:28px}
+h1{margin:0 0 8px;font-size:clamp(18px,5vw,28px);line-height:1.3;overflow-wrap:anywhere}
 body.cadet-details-page .header-top{justify-content:center;position:relative}
-body.cadet-details-page .header-brand{justify-content:center;text-align:center}
+body.cadet-details-page .header-brand{justify-content:center;text-align:center;width:100%;padding:0 64px}
 body.cadet-details-page .header-brand > div{text-align:center}
 body.cadet-details-page .theme-toggle{position:absolute;right:0}
 body.cadet-details-page .header-brand .school-link{position:absolute;left:0}
@@ -75,8 +75,6 @@ button{border:0;border-radius:10px;padding:12px 18px;font-weight:700;cursor:poin
 .primary{background:var(--primary);color:white}
 .secondary{background:var(--secondary-bg);color:var(--secondary-text)}
 .theme-toggle{flex-shrink:0;width:44px;height:44px;padding:0;display:inline-flex;align-items:center;justify-content:center;font-size:22px;line-height:1}
-.progress{height:8px;background:var(--progress-bg);border-radius:99px;overflow:hidden;margin-top:15px}
-.progress-bar{height:100%;width:0;background:var(--primary);transition:.2s}
 .note{font-size:13px;color:var(--muted);margin-top:10px}
 .thank-you{background:var(--card);border-radius:16px;padding:48px 24px;margin:18px 0;text-align:center;box-shadow:var(--shadow)}
 .thank-you-icon{font-size:48px;color:var(--primary);margin-bottom:12px}
@@ -120,11 +118,6 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
       <span id="themeIcon" aria-hidden="true">🌙</span>
     </button>
   </div>
-  <div id="progressSummary">
-    <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
-    <div id="progressText" class="note"></div>
-    <div id="sectionIndicator" class="section-indicator"></div>
-  </div>
 </header>
 
 <div id="assessmentContent">
@@ -153,10 +146,10 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 <script>
 const OPTIONS = [
   "অসাধারণ",
-  "চমৎকার",
-  "উচ্চতর গড়",
-  "সন্তোষজনক",
-  "খারাপ"
+  "খুব ভালো",
+  "গড় পড়তা",
+  "গড় পড়তার নিচে",
+  "সন্তোষজনক নয়"
 ];
 const OPTION_VALUES = Object.fromEntries(OPTIONS.map((option, index) => [
   option,
@@ -164,10 +157,10 @@ const OPTION_VALUES = Object.fromEntries(OPTIONS.map((option, index) => [
 ]));
 const OPTION_EMOJIS = {
   "অসাধারণ": "🌟",
-  "চমৎকার": "⭐",
-  "উচ্চতর গড়": "👍",
-  "সন্তোষজনক": "👌",
-  "খারাপ": "👎"
+  "খুব ভালো": "⭐",
+  "গড় পড়তা": "👍",
+  "গড় পড়তার নিচে": "👌",
+  "সন্তোষজনক নয়": "👎"
 };
 const COLLEGE_RATING_QUESTIONS = [
   {key: "environmentRating", text: "১. প্রত্যেকের ব্যক্তিগত উন্নয়নের জন্য কলেজের বর্তমান পরিবেশ কেমন?"},
@@ -177,7 +170,7 @@ const COLLEGE_RATING_QUESTIONS = [
   {key: "houseMasterDedicationRating", text: "৬. হাউজ মাস্টারের নিবেদন ও আন্তরিকতা কেমন?"},
   {key: "hospitalFacilitiesRating", text: "৭. হাসপাতাল ব্যবস্থাপনা ও পরিবেশ কেমন?"},
   {key: "collegeAdjutantSincerityRating", text: "৮. অ্যাডজুট্যান্টের নিবেদন (Sincerity) কেমন?"},
-  {key: "vicePrincipalViewRating", text: "৯. উপাধ্যক্ষের निवेदन (Sincerity) কেমন?"},
+  {key: "vicePrincipalViewRating", text: "৯. উপাধ্যক্ষের নিবেদন (Sincerity) কেমন?"},
   {key: "principalViewRating", text: "১০.অধ্যক্ষের নিবেদন (Sincerity) কেমন?"},
 ];
 const EVALUATION_COPY = {
@@ -239,8 +232,7 @@ function buildForm(){
     </div>
   </section>
   </section>`;
-  html += `<section class="section">
-    <div class="section-title college-section-title"></div>`;
+  html += `<section class="section">`;
   COLLEGE_RATING_QUESTIONS.forEach(question => {
     html += `<div class="question">
       <div class="qtext">${question.text}</div>
@@ -258,7 +250,7 @@ function buildForm(){
     if(question.key === "environmentRating"){
       html += `<div class="question">
         <label class="qtext" for="collegeMissionDescription">২. বরিশাল ক্যাডেট কলেজ কি কোন সুনির্দিষ্ট লক্ষ্য/ উদ্দেশ্য অর্জনের দিকে ধাবিত হচ্ছে? আপনার দৃষ্টিতে সেই লক্ষ্য/ উদ্দেশ্য কি সেটি এক বা একাধিক বাক্যে বর্ণনা করুন।</label>
-        <textarea id="collegeMissionDescription" class="college-answer" maxlength="5000" placeholder="মতামত বাংলা/ইংরেজি/ ইংরেজি ফন্টে বাংলা(Amar=আমার) লেখা যাবে।"></textarea>
+        <textarea id="collegeMissionDescription" class="college-answer" maxlength="5000" placeholder="মতামত বাংলা/ইংরেজি/ ইংরেজি ফন্টে বাংলা(Amar=আমার) লেখা যাবে।" required></textarea>
       </div>`;
     }
   });
@@ -277,34 +269,18 @@ function buildForm(){
     event.target.value = event.target.value.replace(/\D/g, "");
   });
   showSection(1);
-  document.querySelectorAll('input[type=radio]').forEach(el => el.addEventListener('change', updateProgress));
 }
 
 function toggleCollegeComment(key, selectedValue){
   const commentWrap = document.getElementById(`college-${key}-comment-wrap`);
   const commentField = document.getElementById(`college-${key}-comment`);
-  const showComment = selectedValue === "উচ্চতর গড়"
-    || selectedValue === "সন্তোষজনক"
-    || selectedValue === "খারাপ";
+  const showComment = selectedValue === "গড় পড়তা"
+    || selectedValue === "গড় পড়তার নিচে"
+    || selectedValue === "সন্তোষজনক নয়";
   commentWrap.classList.toggle("show", showComment);
+  commentField.required = showComment;
   if(!showComment){
     commentField.value = "";
-  }
-}
-
-function updateProgress(){
-  const total = COLLEGE_RATING_QUESTIONS.length;
-  let answered = 0;
-  for(const question of COLLEGE_RATING_QUESTIONS){
-    if(document.querySelector(`input[name="college-${question.key}"]:checked`)) answered++;
-  }
-  const progressText = document.getElementById("progressText");
-  const progressBar = document.getElementById("progressBar");
-  if(progressText){
-    progressText.textContent = "";
-  }
-  if(progressBar){
-    progressBar.style.width = `${answered / total * 100}%`;
   }
 }
 
@@ -368,7 +344,6 @@ async function saveToGoogleSheet(){
 
 function showThankYouPage(){
   document.getElementById("assessmentContent").hidden = true;
-  document.getElementById("progressSummary").hidden = true;
   const copy = EVALUATION_COPY.college;
   const thankYouPage = document.getElementById("thankYouPage");
   document.getElementById("thankYouHeading").textContent = copy.thankYouTitle;
@@ -392,9 +367,7 @@ function startOtherEvaluation(){
   document.getElementById("saveStatus").textContent = "";
   document.getElementById("thankYouPage").hidden = true;
   document.getElementById("assessmentContent").hidden = false;
-  document.getElementById("progressSummary").hidden = false;
   selectedEvaluationType = "college";
-  updateProgress();
   showSection(1);
 }
 
@@ -418,17 +391,9 @@ function showSection(sectionNumber){
   const formTitle = isCollegePage ? evaluationCopy.formTitle : "বরিশাল ক্যাডেট কলেজ";
   document.getElementById("formTitle").textContent = formTitle;
   document.title = formTitle;
-  const collegeHeading = document.querySelector(".college-section-title");
-  if(collegeHeading){
-    collegeHeading.textContent = evaluationCopy.title;
-  }
-
   document.querySelectorAll(".section").forEach((section, index)=>{
     section.classList.toggle("active", index + 1 === currentSection);
   });
-
-  document.getElementById("sectionIndicator").textContent = "";
-  document.getElementById("progressSummary").hidden = currentSection !== 2;
 
   const prevBtn = document.getElementById("prevBtn");
   prevBtn.hidden = currentSection === 1;
@@ -487,6 +452,18 @@ function currentSectionComplete(){
       document.querySelector(`input[name="college-${question.key}"]`).focus();
       return false;
     }
+    const commentField = document.getElementById(`college-${question.key}-comment`);
+    if(commentField.required && !commentField.value.trim()){
+      alert("মন্তব্যের ঘর পূরণ করুন।");
+      commentField.focus();
+      return false;
+    }
+  }
+  const missionDescription = document.getElementById("collegeMissionDescription");
+  if(!missionDescription.value.trim()){
+    alert("লক্ষ্য/উদ্দেশ্য সম্পর্কিত মন্তব্যের ঘর পূরণ করুন।");
+    missionDescription.focus();
+    return false;
   }
   return true;
 }
@@ -516,7 +493,6 @@ function clearForm(){
   document.getElementById("assessmentForm").reset();
   document.querySelectorAll(".comment-wrap").forEach(x=>x.classList.remove("show"));
   selectedEvaluationType = "college";
-  updateProgress();
   showSection(1);
 }
 

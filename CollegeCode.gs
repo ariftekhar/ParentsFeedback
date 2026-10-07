@@ -1,5 +1,6 @@
 const COLLEGE_SPREADSHEET_ID = "1k4XTM6-iiD3hhX6s_JCvjJhE1ottpiyL-SZmOOYGlIk";
-const COLLEGE_SHEET_NAME = "College Evaluation";
+const COLL
+EGE_SHEET_NAME = "College Evaluation";
 const COLLEGE_VALID_OPTION_VALUES = [1, 2, 3, 4, 5];
 const COLLEGE_MAX_COMMENT_LENGTH = 45000;
 const COLLEGE_VALID_CLASSES = ["VII", "VIII", "IX", "X", "XI", "XII"];
