@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BCC Evaluation Form</title>
+<title>বরিশাল ক্যাডেট কলেজ</title>
 <link rel="icon" type="image/png" href="icon/bcc.png">
 <style>
 :root{color-scheme:light;--primary:#2563eb;--bg:#f4f7fb;--card:#fff;--text:#172033;--muted:#64748b;--border:#e8edf5;--field-border:#cfd8e6;--field-bg:#fff;--option-bg:#fff;--secondary-bg:#e8eef8;--secondary-text:#172033;--progress-bg:#e6ebf3;--photo-bg:#f8fafc;--shadow:0 4px 18px #0000000d}
@@ -109,21 +109,21 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 <header>
   <div class="header-top">
     <div class="header-brand">
-      <a class="school-link" href="https://infinityar-ict.github.io/EvaluationForm/" target="_blank" rel="noopener noreferrer" aria-label="Visit the evaluation form website">
-        <img class="school-logo" src="icon/bcc.png" alt="Barishal Cadet College emblem">
+      <a class="school-link" href="https://infinityar-ict.github.io/EvaluationForm/" target="_blank" rel="noopener noreferrer" aria-label="মূল্যায়ন ফর্ম ওয়েবসাইট দেখুন">
+        <img class="school-logo" src="icon/bcc.png" alt="বরিশাল ক্যাডেট কলেজের লোগো">
       </a>
       <div>
-        <h1 id="formTitle">BCC Evaluation Form</h1>
+        <h1 id="formTitle">বরিশাল ক্যাডেট কলেজ</h1>
       </div>
     </div>
-    <button type="button" id="themeToggle" class="secondary theme-toggle" aria-label="Enable dark mode" title="Enable dark mode" aria-pressed="false" onclick="toggleTheme()">
+    <button type="button" id="themeToggle" class="secondary theme-toggle" aria-label="ডার্ক মোড চালু করুন" title="ডার্ক মোড চালু করুন" aria-pressed="false" onclick="toggleTheme()">
       <span id="themeIcon" aria-hidden="true">🌙</span>
     </button>
   </div>
   <div id="progressSummary">
     <div class="progress"><div id="progressBar" class="progress-bar"></div></div>
-    <div id="progressText" class="note">0 of 120 questions answered</div>
-    <div id="sectionIndicator" class="section-indicator">Cadet Details</div>
+    <div id="progressText" class="note"></div>
+    <div id="sectionIndicator" class="section-indicator"></div>
   </div>
 </header>
 
@@ -131,112 +131,110 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 <form id="assessmentForm"></form>
 
 <div class="navigation">
-  <button type="button" class="secondary" id="prevBtn" onclick="previousSection()">Previous</button>
-  <button type="button" class="primary next" id="nextBtn" onclick="nextSection()">Next</button>
+  <button type="button" class="secondary" id="prevBtn" onclick="previousSection()">পূর্ববর্তী</button>
+  <button type="button" class="primary next" id="nextBtn" onclick="nextSection()">পরবর্তী</button>
 </div>
 
 <div class="actions">
-  <button type="button" class="secondary" onclick="clearForm()">Clear Form</button>
-  <span class="actions-credit">@ICT Dept., Barishal Cadet College</span>
+  <button type="button" class="secondary" onclick="clearForm()">ফর্ম পরিষ্কার করুন</button>
+  <span class="actions-credit">@আইসিটি বিভাগ, বরিশাল ক্যাডেট কলেজ</span>
 </div>
 <div id="saveStatus" class="note" role="status" aria-live="polite" style="text-align:center"></div>
 </div>
 
 <section id="thankYouPage" class="thank-you" aria-labelledby="thankYouHeading" hidden>
   <div class="thank-you-icon" aria-hidden="true">✓</div>
-  <h2 id="thankYouHeading" tabindex="-1">Thank you!</h2>
-  <p id="thankYouMessage">Your evaluation has been sent. Thank you for completing the assessment.</p>
+  <h2 id="thankYouHeading" tabindex="-1">ধন্যবাদ!</h2>
+  <p id="thankYouMessage">আপনার মূল্যায়ন পাঠানো হয়েছে। মূল্যায়ন সম্পন্ন করার জন্য ধন্যবাদ।</p>
   <button type="button" id="otherEvaluationButton" class="primary other-evaluation-button" onclick="startOtherEvaluation()"></button>
 </section>
 </div>
 
 <script>
 const OPTIONS = [
-  "Out Standing",
-  "Excellent",
-  "Above Average",
-  "Satisfactory",
-  "Poor"
+  "অসাধারণ",
+  "চমৎকার",
+  "উচ্চতর গড়",
+  "সন্তোষজনক",
+  "খারাপ"
 ];
 const OPTION_VALUES = Object.fromEntries(OPTIONS.map((option, index) => [
   option,
   OPTIONS.length - index
 ]));
 const OPTION_EMOJIS = {
-  "Out Standing": "🌟",
-  "Excellent": "⭐",
-  "Above Average": "👍",
-  "Satisfactory": "👌",
-  "Poor": "👎"
+  "অসাধারণ": "🌟",
+  "চমৎকার": "⭐",
+  "উচ্চতর গড়": "👍",
+  "সন্তোষজনক": "👌",
+  "খারাপ": "👎"
 };
 const COLLEGE_RATING_QUESTIONS = [
-  {number: 1, key: "environmentRating", text: "How is the current college environment for supporting everyone's personal development?"},
-  {number: 3, key: "educationDevelopmentRating", text: "How effective are the overall measures taken for the development of education?"},
-  {number: 4, key: "diningQualityRating", text: "How is the quality of cadet dining and food?"},
-  {number: 5, key: "houseEnvironmentRating", text: "How is the current environment of the house?"},
-  {number: 6, key: "formMasterSincerityRating", text: "How is the sincerity of the form master?"},
-  {number: 7, key: "houseMasterDedicationRating", text: "How is the sincerity and dedication of the house master?"},
-  {number: 8, key: "hospitalFacilitiesRating", text: "How are the hospital facilities and environment?"},
-  {number: 9, key: "armedForcesViewRating", text: "Your view about the Armed Forces"},
-  {number: 10, key: "collegeAdjutantSincerityRating", text: "Your view about The Adjutant"},
-  {number: 11, key: "vicePrincipalViewRating", text: "Your view about The Vice-Principal"},
-  {number: 12, key: "principalViewRating", text: "Your view about The Principal"}
+  {key: "environmentRating", text: "১. প্রত্যেকের ব্যক্তিগত উন্নয়নের জন্য কলেজের বর্তমান পরিবেশ কেমন?"},
+  {key: "educationDevelopmentRating", text: "৩. পড়াশোনা উন্নয়নের জন্য গৃহীত সার্বিক প্রদক্ষেপ কেমন?"},
+  {key: "houseEnvironmentRating", text: "৪. হাউজের বর্তমান পরিবেশ কেমন?"},
+  {key: "formMasterSincerityRating", text: "৫. ফর্ম মাস্টারের আন্তরিকতা কেমন?"},
+  {key: "houseMasterDedicationRating", text: "৬. হাউজ মাস্টারের নিবেদন ও আন্তরিকতা কেমন?"},
+  {key: "hospitalFacilitiesRating", text: "৭. হাসপাতাল ব্যবস্থাপনা ও পরিবেশ কেমন?"},
+  {key: "collegeAdjutantSincerityRating", text: "৮. অ্যাডজুট্যান্টের নিবেদন (Sincerity) কেমন?"},
+  {key: "vicePrincipalViewRating", text: "৯. উপাধ্যক্ষের निवेदन (Sincerity) কেমন?"},
+  {key: "principalViewRating", text: "১০.অধ্যক্ষের নিবেদন (Sincerity) কেমন?"},
 ];
 const EVALUATION_COPY = {
   college: {
-    title: "College Evaluation",
-    formTitle: "College Evaluation Form",
-    progressLabel: "College Evaluation",
-    thankYouTitle: "Thank you for completing the College Evaluation!",
-    thankYouMessage: "Your College Evaluation has been sent. Thank you for your feedback.",
-    otherEvaluationLabel: "Submit Another Response"
+    title: "বরিশাল ক্যাডেট কলেজ",
+    formTitle: "বরিশাল ক্যাডেট কলেজ",
+    progressLabel: "বরিশাল ক্যাডেট কলেজ",
+    thankYouTitle: "বরিশাল ক্যাডেট কলেজের মূল্যায়ন সম্পন্ন করার জন্য ধন্যবাদ!",
+    thankYouMessage: "আপনার মূল্যায়ন পাঠানো হয়েছে। আপনার মতামতের জন্য ধন্যবাদ।",
+    otherEvaluationLabel: "আরেকটি উত্তর শুরু করুন"
   }
 };
-const GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwZRAZubuFkVnMT0iyxHoRWzzEBrr4MjIsw-JtFIrd0KEdNLER2BOKjhWYrauXibG0X/exec";
-const COLLEGE_GOOGLE_SHEETS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwYuEB4POxUvuyGKMMDOSFzTtzVqhMVL4mjEx8uchatzoi0Hpg4jbI_naepXFA8_RHm/exec";
+const GOOGLE_SHEETS_WEB_APP_URL = "";
+const COLLEGE_GOOGLE_SHEETS_WEB_APP_URL = "";
 let submissionInProgress = false;
 
 function buildForm(){
   const form = document.getElementById("assessmentForm");
   let html = `<section class="section">
-    <div class="section-title cadet-details-reminder">Cadets are encouraged to mention cadet number and name, but it is not mandatory.</div>
+    <div class="section-title cadet-details-reminder">অভিভাবকগণকে ক্যাডেটের নম্বর এবং নাম উল্লেখ করতে উৎসাহিত করা হলো, কিন্তু এটি বাধ্যতামূলক নয়।</div>
     <div class="student-details">
       <div class="class-field">
-        <label for="className">Class <span aria-hidden="true">*</span></label>
+        <label for="className">শ্রেণি <span aria-hidden="true">*</span></label>
         <select id="className" name="className" required>
-          <option value="">Select a class</option>
-          <option value="VII">VII</option>
-          <option value="VIII">VIII</option>
-          <option value="IX">IX</option>
-          <option value="X">X</option>
-          <option value="XI">XI</option>
-          <option value="XII">XII</option>
+          <option value="">শ্রেণি নির্বাচন করুন</option>
+          <option value="VII">সপ্তম</option>
+          <option value="VIII">অষ্টম</option>
+          <option value="IX">নবম</option>
+          <option value="X">দশম</option>
+          <option value="XI">একাদশ</option>
+          <option value="XII">দ্বাদশ</option>
         </select>
       </div>
       <div class="class-field">
-        <label for="houseName">House <span aria-hidden="true">*</span></label>
+        <label for="houseName">হাউজ <span aria-hidden="true">*</span></label>
         <select id="houseName" name="houseName" required>
-          <option value="">Select a house</option>
-          <option value="Shaheed Suhrawardy House">Shaheed Suhrawardy House</option>
-          <option value="Sher-e-Bangla House">Sher-e-Bangla House</option>
-          <option value="Shariatullah House">Shariatullah House</option>
+          <option value="">হাউজ নির্বাচন করুন</option>
+          <option value="Shaheed Suhrawardy House">শহিদ সোহরাওয়ার্দী হাউজ</option>
+          <option value="Sher-e-Bangla House">শের ই বাংলা হাউজ</option>
+          <option value="Shariatullah House">শরীয়তউল্লাহ হাউজ</option>
         </select>
       </div>
       <div class="class-field">
-        <label for="formName">Form <span aria-hidden="true">*</span></label>
+        <label for="formName">ফর্ম <span aria-hidden="true">*</span></label>
         <select id="formName" name="formName" required>
-          <option value="">Select a form</option>
-          <option value="A">A</option>
-          <option value="B">B</option>
+          <option value="">ফর্ম নির্বাচন করুন</option>
+          <option value="A">ক</option>
+          <option value="B">খ</option>
         </select>
       </div>
       <div class="class-field">
-        <label for="cadetName">Cadet Name</label>
-        <input id="cadetName" name="cadetName" type="text" maxlength="200" autocomplete="name" title="Enter letters and spaces only.">
+        <label for="cadetName">ক্যাডেটের নাম</label>
+        <input id="cadetName" name="cadetName" type="text" maxlength="200" autocomplete="name" title="শুধু বর্ণ ও ফাঁকা জায়গা ব্যবহার করুন।">
       </div>
       <div class="class-field">
-        <label for="cadetNumber">Cadet Number</label>
-        <input id="cadetNumber" name="cadetNumber" type="text" maxlength="100" inputmode="numeric" pattern="[0-9]*" title="Enter digits only.">
+        <label for="cadetNumber">ক্যাডেট নম্বর</label>
+        <input id="cadetNumber" name="cadetNumber" type="text" maxlength="100" inputmode="numeric" pattern="[0-9]*" title="শুধু সংখ্যা লিখুন।">
       </div>
     </div>
   </section>
@@ -245,7 +243,7 @@ function buildForm(){
     <div class="section-title college-section-title"></div>`;
   COLLEGE_RATING_QUESTIONS.forEach(question => {
     html += `<div class="question">
-      <div class="qtext">${question.number}. ${question.text}</div>
+      <div class="qtext">${question.text}</div>
       <div class="options">`;
     OPTIONS.forEach(option => {
       html += `<label class="option">
@@ -254,16 +252,20 @@ function buildForm(){
     });
     html += `</div>
       <div id="college-${question.key}-comment-wrap" class="comment-wrap">
-        <textarea id="college-${question.key}-comment" class="comment" placeholder="Please explain your rating..." required></textarea>
+        <textarea id="college-${question.key}-comment" class="comment" placeholder="মতামত বাংলা/ইংরেজি/ ইংরেজি ফন্টে বাংলা(Amar=আমার) লেখা যাবে।"></textarea>
       </div>
     </div>`;
-    if(question.number === 1){
+    if(question.key === "environmentRating"){
       html += `<div class="question">
-        <label class="qtext" for="collegeMissionDescription">2. Is Barishal Cadet College directed towards a well-defined mission or purpose? From your perspective, describe that objective in one or more sentences.</label>
-        <textarea id="collegeMissionDescription" class="college-answer" maxlength="5000" required></textarea>
+        <label class="qtext" for="collegeMissionDescription">২. বরিশাল ক্যাডেট কলেজ কি কোন সুনির্দিষ্ট লক্ষ্য/ উদ্দেশ্য অর্জনের দিকে ধাবিত হচ্ছে? আপনার দৃষ্টিতে সেই লক্ষ্য/ উদ্দেশ্য কি সেটি এক বা একাধিক বাক্যে বর্ণনা করুন।</label>
+        <textarea id="collegeMissionDescription" class="college-answer" maxlength="5000" placeholder="মতামত বাংলা/ইংরেজি/ ইংরেজি ফন্টে বাংলা(Amar=আমার) লেখা যাবে।"></textarea>
       </div>`;
     }
   });
+  html += `<div class="question">
+    <label class="qtext" for="collegeManagementComment">১১. কলেজের সঠিক পরিচালনা ও পরিস্থিতির মানোন্নয়নে আপনার মতামত লিখুন।</label>
+    <textarea id="collegeManagementComment" class="college-answer" maxlength="5000" placeholder="মতামত বাংলা/ইংরেজি/ ইংরেজি ফন্টে বাংলা(Amar=আমার) লেখা যাবে।"></textarea>
+  </div>`;
   html += `</section>`;
   form.innerHTML = html;
   document.getElementById("cadetName").addEventListener("input", event => {
@@ -278,45 +280,16 @@ function buildForm(){
   document.querySelectorAll('input[type=radio]').forEach(el => el.addEventListener('change', updateProgress));
 }
 
-function toggleCommentState(id, selectedValue){
-  const commentWrap = document.getElementById(id + "-comment-wrap");
-  const commentField = document.getElementById(id + "-comment");
-  const requiresComment = ratingRequiresComment(selectedValue);
-
-  commentWrap.classList.toggle("show", requiresComment);
-  commentField.required = requiresComment;
-  if(!requiresComment){
-    commentField.value = "";
-  }
-}
-
-function ratingRequiresComment(value){
-  return value === "Above Average" || value === "Satisfactory" || value === "Poor";
-}
-
 function toggleCollegeComment(key, selectedValue){
   const commentWrap = document.getElementById(`college-${key}-comment-wrap`);
   const commentField = document.getElementById(`college-${key}-comment`);
-  const requiresComment = ratingRequiresComment(selectedValue);
-  commentWrap.classList.toggle("show", requiresComment);
-  commentField.required = requiresComment;
-  if(!requiresComment){
+  const showComment = selectedValue === "উচ্চতর গড়"
+    || selectedValue === "সন্তোষজনক"
+    || selectedValue === "খারাপ";
+  commentWrap.classList.toggle("show", showComment);
+  if(!showComment){
     commentField.value = "";
   }
-}
-
-function showComment(id){
-  const commentWrap = document.getElementById(id + "-comment-wrap");
-  const commentField = document.getElementById(id + "-comment");
-  commentWrap.classList.add("show");
-  commentField.setAttribute("required", "required");
-}
-function hideComment(id){
-  const commentWrap = document.getElementById(id + "-comment-wrap");
-  const commentField = document.getElementById(id + "-comment");
-  commentWrap.classList.remove("show");
-  commentField.removeAttribute("required");
-  commentField.value = "";
 }
 
 function updateProgress(){
@@ -328,7 +301,7 @@ function updateProgress(){
   const progressText = document.getElementById("progressText");
   const progressBar = document.getElementById("progressBar");
   if(progressText){
-    progressText.textContent = `${answered} of ${total} questions answered`;
+    progressText.textContent = "";
   }
   if(progressBar){
     progressBar.style.width = `${answered / total * 100}%`;
@@ -346,12 +319,12 @@ async function saveToGoogleSheet(){
   const webAppUrl = COLLEGE_GOOGLE_SHEETS_WEB_APP_URL;
   if(webAppUrl === "YOUR_APPS_SCRIPT_WEB_APP_URL"
     || webAppUrl === "YOUR_COLLEGE_APPS_SCRIPT_WEB_APP_URL"){
-    setSaveStatus("Google Sheets saving is not configured yet. Follow the setup steps in README.md.", true);
+    setSaveStatus("গুগল শিটে সংরক্ষণ এখনও কনফিগার করা হয়নি। README.md-এ দেওয়া ধাপ অনুসরণ করুন।", true);
     return;
   }
 
   submissionInProgress = true;
-  setSaveStatus("Sending responses to Google Sheets...");
+  setSaveStatus("উত্তরগুলো গুগল শিটে পাঠানো হচ্ছে...");
   try{
     const submission = {
       evaluationType: "college",
@@ -369,7 +342,8 @@ async function saveToGoogleSheet(){
           question.key,
           document.getElementById(`college-${question.key}-comment`).value.trim()
         ])),
-        missionDescription: document.getElementById("collegeMissionDescription").value.trim()
+        missionDescription: document.getElementById("collegeMissionDescription").value.trim(),
+        managementComment: document.getElementById("collegeManagementComment").value.trim()
       }
     };
     const response = await fetch(webAppUrl, {
@@ -382,11 +356,11 @@ async function saveToGoogleSheet(){
     });
     const result = await response.json();
     if(!response.ok || result.ok !== true){
-      throw new Error(result.error || "The server rejected the response.");
+      throw new Error(result.error || "সার্ভার উত্তর গ্রহণ করেনি।");
     }
     showThankYouPage();
   } catch(error){
-    setSaveStatus(`Could not save the evaluation: ${error.message}`, true);
+    setSaveStatus(`মূল্যায়ন সংরক্ষণ করা যায়নি: ${error.message}`, true);
   } finally{
     submissionInProgress = false;
   }
@@ -415,9 +389,6 @@ function startOtherEvaluation(){
   document.querySelectorAll(".comment-wrap").forEach(commentWrap => {
     commentWrap.classList.remove("show");
   });
-  document.querySelectorAll(".comment, .college-answer").forEach(textarea => {
-    textarea.required = textarea.classList.contains("college-answer");
-  });
   document.getElementById("saveStatus").textContent = "";
   document.getElementById("thankYouPage").hidden = true;
   document.getElementById("assessmentContent").hidden = false;
@@ -444,7 +415,7 @@ function showSection(sectionNumber){
   const isCollegePage = currentSection === 2;
   document.body.classList.toggle("college-evaluation-page", isCollegePage);
   const evaluationCopy = EVALUATION_COPY.college;
-  const formTitle = isCollegePage ? evaluationCopy.formTitle : "BCC Evaluation Form";
+  const formTitle = isCollegePage ? evaluationCopy.formTitle : "বরিশাল ক্যাডেট কলেজ";
   document.getElementById("formTitle").textContent = formTitle;
   document.title = formTitle;
   const collegeHeading = document.querySelector(".college-section-title");
@@ -456,9 +427,7 @@ function showSection(sectionNumber){
     section.classList.toggle("active", index + 1 === currentSection);
   });
 
-  document.getElementById("sectionIndicator").textContent = currentSection === 1
-    ? "Cadet Details"
-    : `${evaluationCopy.progressLabel} — Section 1 of 1`;
+  document.getElementById("sectionIndicator").textContent = "";
   document.getElementById("progressSummary").hidden = currentSection !== 2;
 
   const prevBtn = document.getElementById("prevBtn");
@@ -468,10 +437,10 @@ function showSection(sectionNumber){
   const nextBtn = document.getElementById("nextBtn");
   nextBtn.hidden = false;
   if(currentSection === 2){
-    nextBtn.textContent = "Finish";
+    nextBtn.textContent = "শেষ করুন";
     nextBtn.onclick = finishAssessment;
   } else {
-    nextBtn.textContent = "Next";
+    nextBtn.textContent = "পরবর্তী";
     nextBtn.onclick = nextSection;
   }
 
@@ -482,25 +451,25 @@ function currentSectionComplete(){
   if(currentSection === 1){
     const classField = document.getElementById("className");
     if(!classField.value){
-      alert("Please select a class before moving to the next section.");
+      alert("নির্দিষ্টি শ্রেণি নির্বাচন করুন যাতে পরের ধাপে যেতে পারেন।");
       classField.focus();
       return false;
     }
     const houseField = document.getElementById("houseName");
     if(!houseField.value){
-      alert("Please select a house before moving to the next section.");
+      alert("হাউজ নির্বাচন করুন যাতে পরের ধাপে যেতে পারেন।");
       houseField.focus();
       return false;
     }
     const formField = document.getElementById("formName");
     if(!formField.value){
-      alert("Please select a form before moving to the next section.");
+      alert("ফর্ম নির্বাচন করুন যাতে পরের ধাপে যেতে পারেন।");
       formField.focus();
       return false;
     }
     const cadetName = document.getElementById("cadetName");
     if(cadetName.value.trim() && !/^[\p{L}\p{M}]+(?:\s+[\p{L}\p{M}]+)*$/u.test(cadetName.value.trim())){
-      alert("Cadet Name can contain letters and spaces only.");
+      alert("ক্যাডেটের নাম শুধুমাত্র অক্ষর ও ফাঁকা জায়গা থাকতে পারে।");
       cadetName.focus();
       return false;
     }
@@ -514,22 +483,10 @@ function currentSectionComplete(){
   for(const question of COLLEGE_RATING_QUESTIONS){
     const rating = document.querySelector(`input[name="college-${question.key}"]:checked`);
     if(!rating){
-      alert(`Please select a rating for Question ${question.number}.`);
+      alert("প্রতিটি প্রশ্নের জন্য একটি রেটিং নির্বাচন করুন।");
       document.querySelector(`input[name="college-${question.key}"]`).focus();
       return false;
     }
-    const commentField = document.getElementById(`college-${question.key}-comment`);
-    if(ratingRequiresComment(rating.value) && !commentField.value.trim()){
-      alert(`Please enter a comment for Question ${question.number} when selecting ${rating.value}.`);
-      commentField.focus();
-      return false;
-    }
-  }
-  const missionDescription = document.getElementById("collegeMissionDescription");
-  if(!missionDescription.value.trim()){
-    alert("Please answer Question 2 before submitting.");
-    missionDescription.focus();
-    return false;
   }
   return true;
 }
@@ -555,7 +512,7 @@ function startEvaluation(type){
 }
 
 function clearForm(){
-  if(!confirm("Clear all answers and comments?")) return;
+  if(!confirm("সব উত্তর ও মন্তব্য মুছে ফেলবেন?")) return;
   document.getElementById("assessmentForm").reset();
   document.querySelectorAll(".comment-wrap").forEach(x=>x.classList.remove("show"));
   selectedEvaluationType = "college";
@@ -567,7 +524,7 @@ function applyTheme(theme){
   const isDark = theme === "dark";
   document.body.dataset.theme = isDark ? "dark" : "light";
   const toggle = document.getElementById("themeToggle");
-  const label = isDark ? "Disable dark mode" : "Enable dark mode";
+  const label = isDark ? "ডার্ক মোড বন্ধ করুন" : "ডার্ক মোড চালু করুন";
   toggle.setAttribute("aria-label", label);
   toggle.title = label;
   document.getElementById("themeIcon").textContent = isDark ? "☀️" : "🌙";
